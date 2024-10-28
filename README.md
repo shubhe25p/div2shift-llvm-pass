@@ -15,3 +15,22 @@ clang++ -S -emit-llvm -Xclang -disable-O0-optnone test.cpp -o test.ll
 opt -load-pass-plugin /path/to/libMS.dylib -passes=div-shift test.ll -o mod.bc
 llvm-dis mod.bc -o mod.ll  
 ```
+
+Output:
+
+```
+*** Division SHIFTS PASS EXECUTING ***
+Some instruction was replaced.
+*** Division SHIFTS PASS EXECUTING ***
+Nothing changed.
+*** Division SHIFTS PASS EXECUTING ***
+Nothing changed.
+*** Division SHIFTS PASS EXECUTING ***
+Nothing changed.
+*** Division SHIFTS PASS EXECUTING ***
+Nothing changed.
+*** Division SHIFTS PASS EXECUTING ***
+Nothing changed.
+*** Division SHIFTS PASS EXECUTING ***
+Nothing changed.
+```

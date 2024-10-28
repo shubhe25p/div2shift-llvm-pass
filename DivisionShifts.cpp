@@ -23,18 +23,18 @@ struct DivisionShifts : public PassInfoMixin<DivisionShifts> {
             for (auto I = BB.begin(), E = BB.end(); I != E; ) {
                 Instruction *Inst = &(*I++);
                 // Check if the instruction is a binary operator
-                if (auto *UDiv = dyn_cast<BinaryOperator>(Inst)) {
-                    // Check if the binary operator is UDiv
-                    if (UDiv->getOpcode() == Instruction::UDiv) {
+                if (auto *SDiv = dyn_cast<BinaryOperator>(Inst)) {
+                    // Check if the binary operator is SDiv
+                    if (SDiv->getOpcode() == Instruction::SDiv) {
                         // Check if the second operand is a constant power of two
-                        if (auto *C = dyn_cast<ConstantInt>(UDiv->getOperand(1))) {
+                        if (auto *C = dyn_cast<ConstantInt>(SDiv->getOperand(1))) {
                             if (C->getValue().isPowerOf2()) {
                                 // If true, replace div with right shift
-                                IRBuilder<> Builder(UDiv);
+                                IRBuilder<> Builder(SDiv);
                                 Value *ShiftAmount = Builder.getInt32(C->getValue().exactLogBase2());
-                                Value *NewUDiv = Builder.CreateShr(UDiv->getOperand(0), ShiftAmount);
-                                UDiv->replaceAllUsesWith(NewUDiv);
-                                UDiv->eraseFromParent(); // Remove the div instruction
+                                Value *NewSDiv = Builder.CreateLShr(SDiv->getOperand(0), ShiftAmount);
+                                SDiv->replaceAllUsesWith(NewSDiv);
+                                SDiv->eraseFromParent(); // Remove the div instruction
                                 Modified = true;
                             }
                         }
