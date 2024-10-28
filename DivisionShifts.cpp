@@ -29,12 +29,12 @@ struct DivisionShifts : public PassInfoMixin<DivisionShifts> {
                         // Check if the second operand is a constant power of two
                         if (auto *C = dyn_cast<ConstantInt>(UDiv->getOperand(1))) {
                             if (C->getValue().isPowerOf2()) {
-                                // If true, replace UDivtiplication with left shift
+                                // If true, replace div with right shift
                                 IRBuilder<> Builder(UDiv);
                                 Value *ShiftAmount = Builder.getInt32(C->getValue().exactLogBase2());
                                 Value *NewUDiv = Builder.CreateShr(UDiv->getOperand(0), ShiftAmount);
                                 UDiv->replaceAllUsesWith(NewUDiv);
-                                UDiv->eraseFromParent(); // Remove the UDivtiplication instruction
+                                UDiv->eraseFromParent(); // Remove the div instruction
                                 Modified = true;
                             }
                         }
